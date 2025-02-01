@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Landing } from './Pages/Landing'
 import { About } from './Pages/About'
 import { Navbar } from './Components/Navbar/Navbar';
-import { Map } from './Components/Map/map';
+import Map from './map';
 import './App.css';
 
 
