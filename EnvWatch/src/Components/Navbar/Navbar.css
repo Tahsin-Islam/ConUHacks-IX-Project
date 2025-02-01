@@ -1,0 +1,52 @@
+.navbar {
+    background-color: #000000;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .navlink {
+    text-decoration: none;
+    color: white;
+}
+
+.navlogo p {
+    margin: 0;
+    font-size: 40px;
+    font-family: 'Avenir';
+}
+
+.navlinks {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 50px;
+    color: white;
+    font-size: 20px;
+    font-weight: 400;
+    font-family: 'Avenir';
+}
+
+.navlinks li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: pointer;
+    padding: 10px 10px;
+    transition: background-color 0.3s;
+}
+
+.navlinks li:hover {
+    background-color: #333333;
+    border-radius: 10px;
+}
+
+.navlinks .navlink {
+    text-decoration: none;
+    color: white;
+}

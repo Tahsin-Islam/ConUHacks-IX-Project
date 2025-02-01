@@ -1,0 +1,15 @@
+.about {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    font-family: 'Avenir';
+    padding: 100px;
+}
+
+.about h1 {
+    font-size: 40px;
+    font-family: 'Avenir';
+    margin: 0;
+}
