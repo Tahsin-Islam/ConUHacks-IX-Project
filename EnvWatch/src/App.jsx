@@ -4,6 +4,7 @@ import { Landing } from './Pages/Landing'
 import { About } from './Pages/About'
 import { Navbar } from './Components/Navbar/Navbar';
 import Map from './map';
+import './App.css';
 
 
 function App() {
