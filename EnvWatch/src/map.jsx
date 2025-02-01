@@ -1,8 +1,10 @@
+import React from 'react';
 import { MapContainer, TileLayer, Polygon, Popup } from 'react-leaflet';
 import { LatLngBounds } from 'leaflet';
-import './Map.css';
+import 'leaflet/dist/leaflet.css';
 
-const montrealBounds = new LatLngBounds([45.4, -73.7], [45.65, -73.45]);
+// Adjusted bounds to make it slightly bigger
+const montrealBounds = new LatLngBounds([45.35, -73.85], [45.75, -73.25]);
 
 const boroughs = [
   {
@@ -23,14 +25,25 @@ const boroughs = [
       [45.52, -73.62],
     ],
   },
-  // Add more boroughs as necessary
+
 ];
 
-const Map = () => {
-  console.log("App component rendered");
+const App = () => {
   return (
-    <MapContainer center={[45.5, -73.55]} zoom={12} scrollWheelZoom={false} bounds={montrealBounds} style={{ height: '100vh' }}>
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <MapContainer
+      center={[45.5, -73.55]}
+      zoom={12}
+      scrollWheelZoom={false}
+      bounds={montrealBounds}
+      maxBounds={montrealBounds} 
+      maxBoundsViscosity={1.0} 
+      style={{ height: '100vh' }}
+    >
+      <TileLayer
+        url="https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.{ext}"
+        attribution='Map tiles by <a href="https://stadiamaps.com">Stadia Maps</a>, under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>'
+        ext="png" 
+      />
       {boroughs.map((borough, index) => (
         <Polygon key={index} positions={borough.coordinates} color="blue" weight={2} opacity={0.7}>
           <Popup>{borough.name}</Popup>
@@ -40,5 +53,4 @@ const Map = () => {
   );
 };
 
-
-export default Map;
+export default App;
