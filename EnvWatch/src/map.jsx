@@ -33,7 +33,9 @@ const App = () => {
     <MapContainer
       center={[45.5, -73.55]}
       zoom={12}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}  
+      doubleClickZoom={true}  
+      pinchZoom={true} 
       bounds={montrealBounds}
       maxBounds={montrealBounds} 
       maxBoundsViscosity={1.0} 
@@ -41,7 +43,8 @@ const App = () => {
     >
       <TileLayer
         url="https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.{ext}"
-        attribution='Map tiles by <a href="https://stadiamaps.com">Stadia Maps</a>, under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>'
+        attribution='Map tiles by <a href="https://stadiamaps.com">Stadia Maps</a>, 
+        under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>'
         ext="png" 
       />
       {boroughs.map((borough, index) => (
