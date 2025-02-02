@@ -56,50 +56,54 @@ const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
 router.get('/heatmap', async (req, res) => {
   try {
     const now = Date.now();
-    const { quart } = req.query;
+    let { quart } = req.query;
+
+    // ✅ Translate quart filter from English to French (if needed)
+    const quartMapping = {
+      morning: 'nuit', // 00:01 - 08:00
+      day: 'jour', // 08:01 - 16:00
+      evening: 'soir', // 16:01 - 00:00
+    };
+
+    if (quartMapping[quart]) {
+      quart = quartMapping[quart]; // Convert to French equivalent
+    }
 
     if (!quart && cachedHeatmap && now - lastCacheTime < CACHE_DURATION) {
       return res.json(cachedHeatmap);
     }
 
-    console.log('📥 Fetching optimized heatmap data...');
+    console.log(`📥 Fetching heatmap data for quart: ${quart || 'all times'}`);
 
-    // ✅ Fetch all stops in one query
+    // ✅ Fetch all stops
     const stops = await Stop.find({}, { stop_id: 1, location: 1 });
 
-    // ✅ Find crimes within 500m of any stop **in a single query**
-    const crimes = await Crime.aggregate([
-      {
-        $match: quart ? { quart } : {}, // Apply time filter if requested
-      },
-      {
-        $geoNear: {
-          near: { type: 'Point', coordinates: [0, 0] }, // This will be dynamically replaced per stop
-          distanceField: 'distance',
-          maxDistance: 500,
-          spherical: true,
-          key: 'location',
-        },
-      },
-      {
-        $group: {
-          _id: '$location',
-          count: { $sum: 1 }, // Count crimes at each location
-        },
-      },
-    ]);
+    // ✅ Prepare crime filtering condition
+    let crimeFilter = {};
+    if (quart) {
+      crimeFilter.quart = quart; // Ensure we're filtering with the correct value
+    }
+
+    // ✅ Run all queries in parallel using `Promise.all()`
+    const crimeCounts = await Promise.all(
+      stops.map((stop) =>
+        Crime.countDocuments({
+          ...crimeFilter, // Apply time filter if provided
+          location: {
+            $geoWithin: {
+              $centerSphere: [stop.location.coordinates, 500 / 6378100], // Convert 500m to radians
+            },
+          },
+        })
+      )
+    );
 
     // ✅ Map crime counts to stops
-    const heatmapData = stops.map((stop) => {
-      const crimeData = crimes.find(
-        (crime) => crime._id && crime._id.equals(stop.location)
-      );
-      return {
-        lat: stop.location.coordinates[1], // Latitude
-        lon: stop.location.coordinates[0], // Longitude
-        weight: crimeData ? crimeData.count : 0, // ✅ Ensure weight is returned
-      };
-    });
+    const heatmapData = stops.map((stop, index) => ({
+      lat: stop.location.coordinates[1], // Latitude
+      lon: stop.location.coordinates[0], // Longitude
+      weight: crimeCounts[index], // ✅ Correct crime count at this stop
+    }));
 
     if (!quart) {
       cachedHeatmap = heatmapData;
@@ -112,6 +116,7 @@ router.get('/heatmap', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+  
   
   
 
