@@ -1,20 +1,28 @@
-/* customClusterStyles.css */
-
-/* Custom styling for cluster markers */
 .custom-cluster-icon {
-  background-color: #4caf50; /* Cluster circle color */
+  background: radial-gradient(circle, #ff9800 30%, #f57c00 100%);
   border-radius: 50%;
   color: white;
-  font-size: 12px;
-  font-weight: bold;
+  font-size: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  border: 2px solid #388e3c;
+  border: 2px solid #e65100; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
 }
 
 .custom-cluster-icon .cluster-icon {
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 16px;
+  line-height: 20px;
+  padding: 5px;
+}
+
+.custom-cluster-icon:hover {
+  transform: scale(1.15);
+  background: radial-gradient(circle, #ffa726 30%, #ef6c00 100%); 
+  box-shadow: 0 6px 12px rgba(255, 152, 0, 0.5); 
+  border-color: #d84315;
 }
