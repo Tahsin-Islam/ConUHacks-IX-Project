@@ -1,14 +1,32 @@
 import React from 'react';
 import './CSS/Landing.css';
+import Map from '../Components/Map/map.jsx';
+import Card from '../Components/Card/Card.jsx';
 
 export const Landing = () => {
   return (
-    <div className='landing'>
+    <div className="landing">
       <header className="landing-header">
         <h1>Welcome to EnvWatch</h1>
         <p>Your go-to platform for environmental monitoring and awareness.</p>
-        <a href="#about" className="cta-button">Learn More</a>
       </header>
+      <div className='map-container'>
+        <Map />
+      </div>
+      <div className="card-container">
+      <Card
+          title="What We Do"
+          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla convallis purus eu felis pretium, at auctor enim gravida."
+        />
+        <Card
+          title="Our Mission"
+          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam suscipit odio ut mauris tristique, vel bibendum nisl euismod."
+        />
+        <Card
+          title="Get Involved"
+          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod ligula et dui posuere, in aliquam tortor hendrerit."
+        />
+      </div>
     </div>
   );
 };
