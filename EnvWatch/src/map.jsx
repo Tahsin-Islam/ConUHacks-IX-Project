@@ -1,57 +1,86 @@
-import React from 'react';
-import { MapContainer, TileLayer, Polygon, Popup } from 'react-leaflet';
-import { LatLngBounds } from 'leaflet';
+// App.jsx
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { useEffect, useRef, useState } from 'react';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import 'leaflet.markercluster';
+import './customClusterStyles.css';
 
-// Adjusted bounds to make it slightly bigger
-const montrealBounds = new LatLngBounds([45.35, -73.85], [45.75, -73.25]);
+const montrealBounds = L.latLngBounds([45.35, -73.85], [45.75, -73.25]);
 
-const boroughs = [
-  {
-    name: 'Ville-Marie',
-    coordinates: [
-      [45.505, -73.56],
-      [45.51, -73.56],
-      [45.51, -73.55],
-      [45.505, -73.55],
-    ],
-  },
-  {
-    name: 'Outremont',
-    coordinates: [
-      [45.52, -73.63],
-      [45.53, -73.63],
-      [45.53, -73.62],
-      [45.52, -73.62],
-    ],
-  },
+const ClusteredMarkers = ({ data }) => {
+  const map = useMap();
+  const markersRef = useRef(null);
 
-];
+  useEffect(() => {
+    if (!map || !data.length) return;
+
+    if (markersRef.current) {
+      map.removeLayer(markersRef.current);
+    }
+
+    const markerCluster = L.markerClusterGroup({
+      disableClusteringAtZoom: 18,
+      iconCreateFunction: (cluster) => {
+        const markers = cluster.getAllChildMarkers();
+        const count = markers.length;
+        return L.divIcon({
+          html: `<div class="cluster-icon">${count}</div>`,
+          className: 'leaflet-div-icon custom-cluster-icon',
+          iconSize: [30, 30],
+        });
+      },
+      spiderfyOnMaxZoom: false,
+      showCoverageOnHover: false,
+    });
+
+    data.forEach((stop) => {
+      const marker = L.marker([stop.stop_lat, stop.stop_lon]).bindPopup(stop.stop_name);
+      markerCluster.addLayer(marker);
+    });
+
+    map.addLayer(markerCluster);
+    markersRef.current = markerCluster;
+
+    return () => {
+      if (markersRef.current) {
+        map.removeLayer(markersRef.current);
+      }
+    };
+  }, [map, data]);
+
+  return null; // This component does not render JSX directly.
+};
 
 const App = () => {
+  const [data, setData] = useState([]);
+
+  // Fetch your stops.json data (make sure it's in your public folder)
+  useEffect(() => {
+    fetch('/stops.json')
+      .then((response) => response.json())
+      .then((stops) => {
+        setData(Array.isArray(stops) ? stops : []);
+      })
+      .catch((error) => console.error('Error loading data', error));
+  }, []);
+
   return (
     <MapContainer
       center={[45.5, -73.55]}
       zoom={12}
-      scrollWheelZoom={true}  
-      doubleClickZoom={true}  
-      pinchZoom={true} 
-      bounds={montrealBounds}
-      maxBounds={montrealBounds} 
-      maxBoundsViscosity={1.0} 
+      scrollWheelZoom={true}
+      maxBounds={montrealBounds}
+      maxBoundsViscosity={1.0}
       style={{ height: '100vh' }}
     >
       <TileLayer
-        url="https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.{ext}"
-        attribution='Map tiles by <a href="https://stadiamaps.com">Stadia Maps</a>, 
-        under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>'
-        ext="png" 
+        url="https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png"
+        attribution='Map tiles by <a href="https://stadiamaps.com">Stadia Maps</a>'
       />
-      {boroughs.map((borough, index) => (
-        <Polygon key={index} positions={borough.coordinates} color="blue" weight={2} opacity={0.7}>
-          <Popup>{borough.name}</Popup>
-        </Polygon>
-      ))}
+      <ClusteredMarkers data={data} />
     </MapContainer>
   );
 };

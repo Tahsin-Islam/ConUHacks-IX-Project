@@ -1,0 +1,20 @@
+/* customClusterStyles.css */
+
+/* Custom styling for cluster markers */
+.custom-cluster-icon {
+  background-color: #4caf50; /* Cluster circle color */
+  border-radius: 50%;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 2px solid #388e3c;
+}
+
+.custom-cluster-icon .cluster-icon {
+  font-size: 14px;
+  line-height: 18px;
+}
