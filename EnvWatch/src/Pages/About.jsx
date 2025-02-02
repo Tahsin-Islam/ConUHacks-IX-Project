@@ -7,9 +7,9 @@ export const About = () => {
     <div className='about'>
         <div className='about-description'>
             <h1>About Us</h1>
-            <p>EnvWatch is a web application that allows users to monitor environmental data in real-time. 
-                Users can view data from a variety of sensors and devices, and can also create custom dashboards to display the data in a way that is most useful to them. 
-                EnvWatch is designed to be easy to use and accessible to everyone, from casual users to professional researchers.
+            <p>EnvWatch is a web application that empowers users to track and analyze crime data near transportation stops in real-time. 
+              By leveraging crime data from various sources, users can visualize trends, identify hotspots, and make informed decisions to ensure safety. 
+              Whether you're a concerned commuter, city planner, or researcher, EnvWatch provides the tools to stay informed and make safer, smarter choices.
             </p>
         </div>
         <img src={people_search} alt='placeholder' />

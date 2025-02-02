@@ -8,7 +8,8 @@ export const Landing = () => {
     <div className="landing">
       <header className="landing-header">
         <h1>Welcome to EnvWatch</h1>
-        <p>Your go-to platform for environmental monitoring and awareness.</p>
+        <p>Your go-to platform for monitoring and understanding crime trends around key transportation stops. <br />
+          Explore real-time data, analyze crime patterns, and stay informed to make safer decisions.</p>
       </header>
       <div className='map-container'>
         <Map />
