@@ -133,7 +133,7 @@ const ClusteredMarkers = ({ data }) => {
       }).bindPopup(`
         <strong>${stop.stop_id}</strong><br>
         Crimes: ${stop.weight}<br>
-        <button class="view-details-btn" data-stop="${stop.stop_id}">View Details</button>
+        <button class="view-details-btn" data-stop-id="${stop.stop_id}">View Details</button>
       `);
 
       markerCluster.addLayer(marker);
@@ -142,14 +142,14 @@ const ClusteredMarkers = ({ data }) => {
     map.addLayer(markerCluster);
     markersRef.current = markerCluster;
 
-    // ✅ Handle click on marker popup button
+    // Handle click on the "Details" button
     markerCluster.on('popupopen', (event) => {
       const button =
         event.popup._contentNode.querySelector('.view-details-btn');
       if (button) {
         button.addEventListener('click', () => {
-          const stopId = button.getAttribute('data-stop');
-          navigate(`/stop/${stopId}`);
+          const stopId = button.getAttribute('data-stop-id');
+          navigate(`/stop/${stopId}`); // Navigate to the details page
         });
       }
     });
@@ -163,6 +163,8 @@ const ClusteredMarkers = ({ data }) => {
 
   return null;
 };
+
+
 
 const HomeMap = () => {
   const [data, setData] = useState([]);
