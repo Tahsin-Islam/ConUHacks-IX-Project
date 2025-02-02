@@ -54,7 +54,7 @@ const ClusteredMarkers = ({ data }) => {
   return null; // This component does not render JSX directly.
 };
 
-const App = () => {
+const Map = () => {
   const [data, setData] = useState([]);
 
   // Fetch your stops.json data (make sure it's in your public folder)
@@ -85,4 +85,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Map;
