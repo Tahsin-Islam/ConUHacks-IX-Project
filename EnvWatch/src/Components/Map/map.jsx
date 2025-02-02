@@ -1,15 +1,20 @@
 // App.jsx
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster';
+import 'leaflet.heat';
 import './customClusterStyles.css';
 
 const montrealBounds = L.latLngBounds([45.35, -73.85], [45.75, -73.25]);
 
+// -----------------------------
+// Clustered Markers Component
+// -----------------------------
 const ClusteredMarkers = ({ data }) => {
   const map = useMap();
   const markersRef = useRef(null);
@@ -51,20 +56,30 @@ const ClusteredMarkers = ({ data }) => {
     };
   }, [map, data]);
 
-  return null; // This component does not render JSX directly.
+  return null;
 };
 
+// -----------------------------
+// Heatmap Overlay Component using Axios
+// -----------------------------
+
+
+
+// -----------------------------
+// Main Map Component
+// -----------------------------
 const Map = () => {
   const [data, setData] = useState([]);
 
-  // Fetch your stops.json data (make sure it's in your public folder)
+  // Fetch stops.json data (make sure it's in your public folder)
   useEffect(() => {
-    fetch('/stops.json')
-      .then((response) => response.json())
-      .then((stops) => {
+    axios
+      .get('/stops.json')
+      .then((response) => {
+        const stops = response.data;
         setData(Array.isArray(stops) ? stops : []);
       })
-      .catch((error) => console.error('Error loading data', error));
+      .catch((error) => console.error('Error loading stops data:', error));
   }, []);
 
   return (
@@ -80,7 +95,10 @@ const Map = () => {
         url="https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png"
         attribution='Map tiles by <a href="https://stadiamaps.com">Stadia Maps</a>'
       />
+      {/* Clustered Markers Layer */}
       <ClusteredMarkers data={data} />
+     
+      
     </MapContainer>
   );
 };
